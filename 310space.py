@@ -10,34 +10,53 @@ uname = "Max"
 #def wait():
     #msv.getch()
 
-def busociety_main():
+def buverse_main():
     if uname in userlst:
         print("#"*64)
-        print("< [ Welcome to BU-Society ] >".center(64))
-        print("< [ %s ] >".center(64) %uname)
+        print("< [ BU-Verse ] >".center(64))
+        print("< [ Welcome Back %s ] >".center(64) %uname)
         print("#"*64)
         print("/" * 64)
         print("/" * 64)
         print("\\" * 64)
         print("\\" * 64)
     else:
-        print("#" * 64)
-        print("< [ Welcome to BU-Society ] >".center(64))
-        print("* Please Login to continue ".center(64))
+        while True:
+            print("#" * 64)
+            print("< [ Welcome to BU-Verse ] >".center(64))
+            print("* Please Login to continue! ".center(64))
+            print("#" * 64)
+            print("[1] Login")
+            print("[2] Sign-up")
+            print("[0] Exit the Program")
+            gout = input("Press select menu : ")
+            if gout == "1":
+                print("Going to Login..")
+                buverse_login()
+            elif gout == "2":
+                print("Going to Sign-up..")
+                buverse_signup()
+            elif gout == "0":
+                exit("[ Exiting the BU-Verse.. ]")
 
-        print("#" * 64)
-        input("Press any key to Login.. ")
-        busociety_login()
+def buverse_signup():
+    print("+ " * 32)
+    print("< [ BU-Verse Sign-up ] >".center(64))
+    print("+ " * 32)
+    uname = input("Enter Your Username \n> ")
+    pwkey = input("Enter Your Password (Must have more than 8 characters) \n> ")
+    uid = int(input("Enter Your ID card Number (Must be number and more equal 13 character) \n> "))
+    print("\n"*5)
 
-
-
-def busociety_login():
+def buverse_login():
     print("|"*64)
-    print("<[ BU-Society Login ]>".center(64))
+    print("< [ BU-Verse Login ] >".center(64))
     print("|"*64)
+    print("\n" * 5)
 
 
 
 
 
-busociety_main()
+
+buverse_main()

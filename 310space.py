@@ -1,6 +1,6 @@
 # CS310 127G Project310 Anupun Khumthong 1640705560
 # BU Society Program #nukaze-
-#import msvcrt as msv
+import getpass
 feedlst, postlst, disnamelst = [], [], []                                   # contentfeed
 userlst, keylst,  = [],[]                                                   # LoginSystem
 namelst, snamelst, majorlst, facultylst, majorlst = [], [], [], [], []      # Personal data
@@ -44,8 +44,10 @@ def buverse_signup():
     print("< [ BU-Verse Sign-up ] >".center(64))
     print("+ " * 32)
     uname = input("Enter Your Username \n> ")
-    pwkey = input("Enter Your Password (Must have more than 8 characters) \n> ")
-    uid = int(input("Enter Your ID card Number (Must be number and more equal 13 character) \n> "))
+    pwkey1 = getpass.getpass("Enter Your Password (Must have more than 8 characters) \n> ")
+    pwkey2 = getpass.getpass("Confirm Your Password (Must have more than 8 characters) \n> ")
+    uid = input("Enter Your ID card Number (Must be number and more equal 13 character) \n> ")
+    disname = input("Enter Your Name to display on profile (Can edit after) \n> ")
     print("\n"*5)
 
 def buverse_login():

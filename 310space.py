@@ -77,4 +77,21 @@ def buverse_login():
     print("\n" * 5)
 
 
+#login?guide
+#file = open('profile.txt','r')
+#datalst = file.read().splitlines()
+#t = input("Enter t ")
+#x = 0
+#print(datalst)
+#while True:
+#        if t in datalst:
+#            u_sesion = datalst.index(t)
+#            print(u_sesion)
+#            print("go in")
+#            break
+#        else:
+#            print("Get out")
+#            break
+
+
 buverse_main()

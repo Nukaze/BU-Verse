@@ -1,11 +1,25 @@
 # CS310 127G Project310 Anupun Khumthong 1640705560
 # BU Society Program #nukaze-
 import getpass
+import os
+import time
+
 feedlst, postlst, disnamelst = [], [], []                                   # contentfeed
 userlst, keylst, sessionlst  = [], [], []                                   # LoginSystem
 namelst, snamelst, majorlst, facultylst, majorlst = [], [], [], [], []      # Personal data
 adminlst = []
 uname = ""
+uiclear = lambda: os.system('cls')
+timer = 0
+def loading_progress(timer,interval,delay):
+    print("[",end="")
+    for i in range(timer):
+        time.sleep(interval)
+        loadprogress = "■" * i * 4
+        print("%s" % loadprogress, end="")
+    print("]")
+    time.sleep(delay)
+
 def buverse_main():
     if uname in userlst:
         print("#"*64)
@@ -18,6 +32,7 @@ def buverse_main():
         print("\\" * 64)
     else:
         while True:
+            uiclear()
             print("#" * 64)
             print("< [ Welcome to BU-Verse ] >".center(64))
             print("* Please Login to continue! ".center(64))
@@ -28,14 +43,21 @@ def buverse_main():
             gout = input("Press select menu : ")
             if gout == "1":
                 print("[ Going to Login.. ]")
+                loading_progress(5,0.2,1)
                 buverse_login()
             elif gout == "2":
                 print("[ Going to Sign-up.. ]")
+                loading_progress(5,0.4,1)
                 buverse_signup()
             elif gout == "0":
                 exit("[ Exiting the BU-Verse.. ]")
+            else:
+                input("!! Invalid Menu!! Please any key to try again.")
+
+
 
 def buverse_signup():       # 0000000000000
+    uiclear()
     print("+" * 64)
     print("< [ BU-Verse Sign-up ] >".center(64))
     print("+" * 64)
@@ -60,7 +82,7 @@ def buverse_signup():       # 0000000000000
     if pwkey1 == pwkey2:
         keylst.append(pwkey1)
     else:
-        print("* Those passwords didn't match!! Please try again.")
+        print("# Those passwords didn't match!! Please try again.")
         buverse_signup()
     uid = input("Enter Your ID card Number (Must be number and more equal 13 character) \n> ")
     while len(uid) != 13 or pwkey1.isalpha():
@@ -71,6 +93,7 @@ def buverse_signup():       # 0000000000000
     print("\n"*5)
 
 def buverse_login():
+    uiclear()
     print("|"*64)
     print("< [ BU-Verse Login ] >".center(64))
     print("|"*64)

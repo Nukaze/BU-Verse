@@ -43,14 +43,18 @@ def buverse_main():
             gout = input("Press select menu : ")
             if gout == "1":
                 print("[ Going to Login.. ]")
-                loading_progress(5,0.2,1)
+                loading_progress(4,0.2,1)
                 buverse_login()
             elif gout == "2":
                 print("[ Going to Sign-up.. ]")
-                loading_progress(5,0.4,1)
+                loading_progress(4,0.4,1)
                 buverse_signup()
             elif gout == "0":
-                exit("[ Exiting the BU-Verse.. ]")
+                time.sleep(0.25)
+                uiclear()
+                time.sleep(0.15)
+                print("."*64)
+                exit("[ Exiting the BU-Verse.. ]".center(64) + "\n"+"."*64)
             else:
                 input("!! Invalid Menu!! Please any key to try again.")
 

@@ -11,6 +11,18 @@ adminlst = []
 uname = ""
 uiclear = lambda: os.system('cls')
 timer = 0
+def loadprogress():
+    input("> Press any key to analysis raw data to University database  ")
+    print("> [ Analysing Data.. ]")
+    t = 5
+    print("> [",end="")
+    for i in range(t):
+        time.sleep(0.15)
+        loadprogress = "■"*i*4
+        print("%s"%loadprogress,end="")
+    print("]")
+    time.sleep(0.3)
+    print("> [ 100% Database Analysis Successfully. ]")
 def loading_progress(timer,interval,delay):
     print("[",end="")
     for i in range(timer):

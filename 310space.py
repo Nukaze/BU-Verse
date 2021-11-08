@@ -8,7 +8,7 @@ import time
 feedlst, postlst, disnamelst = [], [], []                                   # contentfeed
 userlst, pwkeylst, idclst, sessionlst  = [], [], [], []                     # LoginSystem
 namelst, snamelst, majorlst, facultylst, majorlst = [], [], [], [], []      # Personal data
-adminlst = []
+userxlst,pwxlst = [],[]
 uname = ""
 
 timer,idx,sessionActive = 0,0,0
@@ -26,8 +26,33 @@ def loading_progress(timer,interval,delay):
     print("]")
     time.sleep(delay)
 
+def buvs_lstclear():
+    userlst.clear()
+    pwkeylst.clear()
+    idclst.clear()
+    disnamelst.clear()
+    sessionlst.clear()
+
+def buvs_navigate():
+    print("\\"*64)
+    nav = input("[ Choose [Y] back to Main menu or [x] to exit. ]\n> "+"\n"+"/" * 64)
+    print("/" * 64)
+    if nav.upper() == "Y":
+        print("[ Going back to the Main menu ]")
+    elif nav.upper() == "X":
+        buvs_exit()
+    else: buvs_navigate()
+
+
+def buvs_exit():
+    time.sleep(0.25)
+    uiclear()
+    time.sleep(0.15)
+    print("." * 64)
+    exit("[ Exiting the BU-Verse.. ]".center(64) + "\n" + "." * 64)
+
 def buverse_main(sessionActive):
-    userlst.clear();pwkeylst.clear();idclst.clear();disnamelst.clear()
+    print("ssact =",sessionActive)
     if sessionActive == 1:
         print("#"*64)
         print("< [ BU-Verse ] >".center(64))
@@ -37,9 +62,12 @@ def buverse_main(sessionActive):
         print("/" * 64)
         print("\\" * 64)
         print("\\" * 64)
+        input("Enter Main Bu-verse")
     else:
         while True:
             uiclear()
+            buvs_lstclear()
+            print("ssact =",sessionActive)
             print("#" * 64)
             print("< [ Welcome to BU-Verse ] >".center(64))
             print("* Please Login to continue! ".center(64))
@@ -58,18 +86,14 @@ def buverse_main(sessionActive):
                 loading_progress(4,0.3,0.5)
                 buverse_signup()
             elif gout == "0":
-                time.sleep(0.25)
-                uiclear()
-                time.sleep(0.15)
-                print("."*64)
-                exit("[ Exiting the BU-Verse.. ]".center(64) + "\n"+"."*64)
+                buvs_exit()
             else:
                 print("!! Invalid Menu, Please try again.")
                 time.sleep(1)
 
 def buverse_signup():       # 0000000000000
     uiclear()
-    userlst.clear();pwkeylst.clear();idclst.clear();disnamelst.clear()
+    buvs_lstclear()
     print(headsignup)
     uname = input("Enter Your Username \n> ")
     with open('buvs_userdb.txt','r') as dbuser:
@@ -107,7 +131,6 @@ def buverse_signup():       # 0000000000000
 
 def buverse_getpwkey(idx):
     pwkey1 = prompt("Enter Your Password (Must have more than 8 characters) \n> ",is_password = True)
-    #pwkey1 = getpass.getpass("Enter Your Password (Must have more than 8 characters) \n> ",ispassword = True)
     while len(pwkey1) < 8:
         uiclear()
         print(headsignup)
@@ -116,7 +139,8 @@ def buverse_getpwkey(idx):
         pwkey1 = prompt("Enter Your Password (Must have more than 8 characters) \n> ",is_password = True)
     pwkey2 = prompt("Confirm Your Password (Must have more than 8 characters) \n> ",is_password=True)
     if pwkey1 == pwkey2:
-        pwkeylst.append(pwkey1)
+        pwhashed = pwhash(pwkey1)
+        pwkeylst.append(pwhashed)
     else:
         uiclear()
         print(headsignup)
@@ -124,34 +148,67 @@ def buverse_getpwkey(idx):
         print("[ # Those passwords didn't match!! Please try again. ]")
         buverse_getpwkey(idx)
 
+def pwhash(pwkey1):
+    return hashlib.sha256(str.encode(pwkey1)).hexdigest()
+
+def pwdehash(pwkeyx, dehash):
+    return pwhash(pwkeyx) == dehash
+
 def buverse_login():
     uiclear()
-    userlst.clear();pwkeylst.clear();idclst.clear();disnamelst.clear()
+    buvs_lstclear()
+    with open('buvs_userdb.txt', 'r')as dbuser:
+        dbkey = open('buvs_keydb.txt','r')
+        while True:
+            userdata = dbuser.readline().split()
+            pwkeydata = dbkey.readline().split()
+            if userdata != [] and pwkeydata != []:
+                userlst.append(userdata[0])
+                disnamelst.append(userdata[1])
+                pwkeylst.append(pwkeydata[0])
+            else: break
+        print(userlst)
+        print(pwkeylst)
+        dbkey.close()
+
+    with open('buvs_xlogindb.txt','r')as dbxlog:
+        while True:
+            xdata = dbxlog.readline().split()
+            if xdata != []:
+                userxlst.append(xdata[0])
+                pwxlst.append(xdata[1])
+            else: break
+        print(userxlst,pwxlst)
+
     print(headlogin)
     username = input("USERNAME : ".rjust(24))
-    pwkey = prompt("PASSWORD : ".rjust(24),is_password=True)
-    dbuser = open('buvs_userdb.txt','r')
-    dbkey = open('buvs_keydb.txt','r')
-    userline = dbuser.read().splitlines()
-    for run in userline:
-        pos = run.split()
-        userlst.append(pos[0])
-        print(userlst)
-        if username in userlst:
-            idx = userlst.index(username).
-            if username == userlst[idx]
-
-
-            print("yes in user list")
+    pwkeylog = prompt("PASSWORD : ".rjust(24),is_password=True)
+    print("|" * 64)
+    if username in userlst:
+        idx = userlst.index(username)
+        if pwdehash(pwkeylog, pwkeylst[idx]):
+            print("[ Password Matched loging-in.. ]".center(64))
+            print("^"*64)
+            input("# Press Any key to continue  > ")
             sessionActive = 1
-            #buverse_main(sessionActive)
+            buverse_main(sessionActive)
         else:
-            print("nah not in user list")
-            print(userline,run,pos[0])
-            pass
-    print("\n" * 3)
-    input("go menu")
+            print("|"*64)
+            print("[ Wrong Password, Please try again.. ]")
+            print("|" * 64)
+            time.sleep(4)
+            buverse_login()
+    else:
+        print("[ Sorry, Username not found. ]".center(64))
+        buvs_navigate()
 
+def buverse_passwordchecklogin(idx):
+    dbkey = open('buvs_keydb.txt', 'r')
+    pwkeyline = dbkey.read().splitlines()
+    print(pwkeyline)
+    for run in range(len(pwkeyline)):
+        pwkeylst.append(run)
+        print(pwkeylst)
 
 """
 login?guide

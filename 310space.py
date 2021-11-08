@@ -5,24 +5,14 @@ import os
 import time
 
 feedlst, postlst, disnamelst = [], [], []                                   # contentfeed
-userlst, keylst, sessionlst  = [], [], []                                   # LoginSystem
+userlst, keylst, uidlst, sessionlst  = [], [], [], []                       # LoginSystem
 namelst, snamelst, majorlst, facultylst, majorlst = [], [], [], [], []      # Personal data
 adminlst = []
 uname = ""
+timer,idx = 0,0
 uiclear = lambda: os.system('cls')
-timer = 0
-def loadprogress():
-    input("> Press any key to analysis raw data to University database  ")
-    print("> [ Analysing Data.. ]")
-    t = 5
-    print("> [",end="")
-    for i in range(t):
-        time.sleep(0.15)
-        loadprogress = "■"*i*4
-        print("%s"%loadprogress,end="")
-    print("]")
-    time.sleep(0.3)
-    print("> [ 100% Database Analysis Successfully. ]")
+headsignup = ("+" * 64 + "\n" + "< [ BU-Verse Sign-up ] >".center(64) + "\n" + "+" * 64)
+
 def loading_progress(timer,interval,delay):
     print("[",end="")
     for i in range(timer):
@@ -68,19 +58,36 @@ def buverse_main():
                 print("."*64)
                 exit("[ Exiting the BU-Verse.. ]".center(64) + "\n"+"."*64)
             else:
-                input("!! Invalid Menu!! Please any key to try again.")
+                input("!! Invalid Menu, Please any key to try again.")
 
-
+def buverse_getpwkey(idx):
+    pwkey1 = getpass.getpass("Enter Your Password (Must have more than 8 characters) \n> ")
+    while len(pwkey1) < 8:
+        uiclear()
+        print(headsignup)
+        print("Enter Your Username \n> " + userlst[idx],end="\n")
+        print("!! Password Must have more than 8 characters.")
+        pwkey1 = getpass.getpass("Enter Your Password (Must have more than 8 characters) \n> ")
+    pwkey2 = getpass.getpass("Confirm Your Password (Must have more than 8 characters) \n> ")
+    if pwkey1 == pwkey2:
+        keylst.append(pwkey1)
+    else:
+        os.system('cls')
+        print("Enter Your Username \n> " + userlst[idx])
+        print("[ # Those passwords didn't match!! Please try again. ]")
+        buverse_getpwkey(idx)
 
 def buverse_signup():       # 0000000000000
     uiclear()
-    print("+" * 64)
-    print("< [ BU-Verse Sign-up ] >".center(64))
-    print("+" * 64)
+    print(headsignup)
     uname = input("Enter Your Username \n> ")
     dbuser = open('buvs_userdb.txt','r+')
     if uname not in dbuser:
-        dbuser.write(uname)
+        userlst.append(uname)
+        global idx
+        idx = userlst.index(uname)
+        print(userlst)
+        buverse_getpwkey(idx)
     else:
         strx64 = "x"*64
         print(strx64.center(64))
@@ -89,22 +96,15 @@ def buverse_signup():       # 0000000000000
         print(strx64.center(64))
         print("")
         buverse_signup()
-    dbuser.close()
-    pwkey1 = getpass.getpass("Enter Your Password (Must have more than 8 characters) \n> ")
-    while len(pwkey1) < 8 :
-        print("* Password Must have more than 8 characters.")
-        pwkey1 = getpass.getpass("Enter Your Password (Must have more than 8 characters) \n> ")
-    pwkey2 = getpass.getpass("Confirm Your Password (Must have more than 8 characters) \n> ")
-    if pwkey1 == pwkey2:
-        keylst.append(pwkey1)
-    else:
-        print("# Those passwords didn't match!! Please try again.")
-        buverse_signup()
+    #buverse_getpwkey()
     uid = input("Enter Your ID card Number (Must be number and more equal 13 character) \n> ")
-    while len(uid) != 13 or pwkey1.isalpha():
+    while len(uid) != 13 or uid.isalpha():
         print("ID card must have 13 characters and number only")
         uid = input("Enter Your ID card Number (Must be number and more equal 13 character) \n> ")
+    uid
     disname = input("Enter Your Name to display on profile (Can edit after) \n> ")
+
+    dbuser.close()
     print("[ BU-Verse Sign-up Successfully. ]")
     print("\n"*5)
 

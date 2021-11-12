@@ -1,2 +1,6 @@
 hanzo shimadaHunzo
 genji shimadaGenji
+mccree cassidy mccree
+tracer Tracer_Speedster
+mercy Phama_Mercy
+pl Phantom_Lancer

@@ -46,88 +46,78 @@ def buvs_navigate():
 def buvs_exit():
     time.sleep(0.25)
     uiclear()
-    time.sleep(0.15)
+    time.sleep(0.20)
     print("." * 64)
     exit("[ Exiting the BU-Verse.. ]".center(64) + "\n" + "." * 64)
 
 def getfile(filecall):
-    """Return the size of a file, reported by os.stat()."""
     return os.stat(filecall).st_size
 
 def buverse_recallsession():
-    getfile(bu)
     buvs_checklstclear()
-    with open('buvs_recallsession.txt','r')as dbrecallss:
-        os.stat("buvs_recallsession.txt").st_size == 0
-        print(dbrecallss)
-        if dbrecallss == []:
-            buverse_main(0)
-        """
-        if dbrecallss !=[] :
-            recalldata = dbrecallss.readline().split()
-            print(recalldata)
-            sessionRecall = int(recalldata[0])
-            recusername = recalldata[1]
-            recpwkeylog = recalldata[2]
-            with open('buvs_userdb.txt','r')as dbuser,open('buvs_keydb.txt','r')as dbkey:
-                while True:
-                    userdata = dbuser.readline().split()
-                    pwkeydata = dbkey.readline().split()
-                    if userdata != [] and pwkeydata != []:
-                        userlst.append(userdata[0])
-                        disnamelst.append(userdata[1])
-                        pwkeylst.append(pwkeydata[0])
-                    else:
-                        break
-                print(userlst)
-                print(pwkeylst)
-                dbkey.close()
-            with open('buvs_xlogindb.txt', 'r') as dbxlog:
-                while True:
-                    xdata = dbxlog.readline().split()
-                    if xdata != []:
-                        devuserxlst.append(xdata[0])
-                        devpwxlst.append(xdata[1])
-                        devdislst.append(xdata[2])
-                    else:
-                        break
-                print(devuserxlst, devpwxlst)
-            if recusername in userlst:
-                global idx, ssdisname, ssuname
-                idx = userlst.index(recusername)
-                if recpwkeylog == pwkeylst[idx]:  # if pwdehash True
-                    ssunamelst.append(recusername)
-                    ssuname = "".join(ssunamelst)
-                    ssdisnamelst.append(disnamelst[idx])
-                    ssdisname = "".join(ssdisnamelst)
-                    dbrecallss = open('buvs_recallsession.txt', 'w')
-                    dbrecallss.write("1" + " " + recusername + " " + pwkeylst[idx])
-                    print(" "*19,end="");loading_progress(4,0.3,0.2)
-                    print("[ Recalling Profile logging-in.. ]".center(64))
-                    time.sleep(0.5)
-                    print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
-                    input("# Press Any key to continue  > ")
-                    time.sleep(2.5)
-                    uiclear()
-                    buverse_main(sessionRecall)
-                elif recusername in devuserxlst:
-                    idx = devuserxlst.index(recusername)
-                    if recpwkeylog == devpwxlst[idx]:
+    if getfile('buvs_recallsession.txt'):
+        with open('buvs_recallsession.txt','r')as dbrecallss:
+            print(dbrecallss)
+            if dbrecallss !=[] :
+                recalldata = dbrecallss.readline().split()
+                print(recalldata)
+                sessionRecall = int(recalldata[0])
+                recusername = recalldata[1]
+                recpwkeylog = recalldata[2]
+                with open('buvs_userdb.txt','r')as dbuser,open('buvs_keydb.txt','r')as dbkey:
+                    while True:
+                        userdata = dbuser.readline().split()
+                        pwkeydata = dbkey.readline().split()
+                        if userdata != [] and pwkeydata != []:
+                            userlst.append(userdata[0])
+                            disnamelst.append(userdata[1])
+                            pwkeylst.append(pwkeydata[0])
+                        else:
+                            break
+                    print(userlst)
+                    print(pwkeylst)
+                    dbkey.close()
+                with open('buvs_xlogindb.txt', 'r') as dbxlog:
+                    while True:
+                        xdata = dbxlog.readline().split()
+                        if xdata != []:
+                            devuserxlst.append(xdata[0])
+                            devpwxlst.append(xdata[1])
+                            devdislst.append(xdata[2])
+                        else:
+                            break
+                    print(devuserxlst, devpwxlst)
+                if recusername in userlst:
+                    global idx, ssdisname, ssuname
+                    idx = userlst.index(recusername)
+                    if recpwkeylog == pwkeylst[idx]:  # if pwdehash True
                         ssunamelst.append(recusername)
                         ssuname = "".join(ssunamelst)
-                        ssdisnamelst.append(devdislst[idx])
+                        ssdisnamelst.append(disnamelst[idx])
                         ssdisname = "".join(ssdisnamelst)
-                        dbrecallss = open('buvs_recallsession.txt', 'w')
-                        dbrecallss.write("1" + " " + recusername + " " + devpwxlst[idx])
-                        print("[ Password Matched logging-in.. ]".center(64))
-                        time.sleep(0.25)
-                        print(("[ Welcome back Dev %s ]" % ssdisname).center(64))
-                        print("|" * 64)
+                        print(" "*19,end="");loading_progress(4,0.3,0.2)
+                        print("[ Recalling Profile logging-in.. ]".center(64))
+                        time.sleep(0.5)
+                        print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
                         input("# Press Any key to continue  > ")
+                        time.sleep(0.1)
                         uiclear()
                         buverse_main(sessionRecall)
-        else:
-            buverse_main(0)"""
+                    elif recusername in devuserxlst:
+                        idx = devuserxlst.index(recusername)
+                        if recpwkeylog == devpwxlst[idx]:
+                            ssunamelst.append(recusername)
+                            ssuname = "".join(ssunamelst)
+                            ssdisnamelst.append(devdislst[idx])
+                            ssdisname = "".join(ssdisnamelst)
+                            print("[ Password Matched logging-in.. ]".center(64))
+                            time.sleep(0.25)
+                            print(("[ Welcome back Dev %s ]" % ssdisname).center(64))
+                            print("|" * 64)
+                            input("# Press Any key to continue  > ")
+                            uiclear()
+                            buverse_main(sessionRecall)
+    else: buverse_main(0)
 
 def buverse_main(sessionActive):
     if sessionActive == 1:#user
@@ -147,7 +137,6 @@ def buverse_main(sessionActive):
         input("Enter Main Bu-verse")
         buverse_main(sessionActive)
     else:
-    #while True:
         uiclear()
         buvs_checklstclear()
         print("sessionActive =",sessionActive)
@@ -342,15 +331,6 @@ def buverse_login():
         time.sleep(.5)
         buvs_navigate()
 
-### have no use
-def buverse_passwordchecklogin(idx):
-    dbkey = open('buvs_keydb.txt', 'r')
-    pwkeyline = dbkey.read().splitlines()
-    print(pwkeyline)
-    for run in range(len(pwkeyline)):
-        pwkeylst.append(run)
-        print(pwkeylst)
-
 def buverse_versemain(sessionActive):
     while True:
         uiclear()
@@ -360,7 +340,7 @@ def buverse_versemain(sessionActive):
         print(("[ %s ]" % ssdisname).center(64))
         print("#" * 64)
         print("[1] Post someting? [2] Explore People [3] My Verse".center(64))
-        print("[0] Exit        [00] Log-out and Exit".center(64))
+        print("[0] Exit  [00] Log-out and Exit".center(64))
         vmenu = input("> ")
         if vmenu == "1":
             buverse_verseposting()
@@ -372,7 +352,9 @@ def buverse_versemain(sessionActive):
             buvs_exit()
         elif vmenu == "00":
             with open('buvs_recallsession.txt','w')as dbrecallss:
-                dbrecallss.write()
+                dbrecallss.flush()
+            print("[ Log-out successflly. ]".center(64))
+            time.sleep(1.5)
             buvs_exit()
             pass
     pass
@@ -391,8 +373,5 @@ def buverse_verseprofile():
 
 
 
-
-
-
 buverse_recallsession()
-#buverse_main(sessionActive)
+buverse_main(sessionActive)

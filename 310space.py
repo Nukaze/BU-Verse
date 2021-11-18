@@ -5,6 +5,7 @@ import hashlib
 import os
 import time
 import datetime
+import sys
 ##############################################################################
 #                           BU-Verse Variable-Phase                          #
 ##############################################################################
@@ -14,8 +15,7 @@ userlst, pwkeylst, idclst = [], [], []                                          
 devuserxlst, devpwxlst, devdislst = [], [],[]                                           # DevLoginCheck
 namelst, snamelst,disnamelst, majorlst, facultylst, majorlst = [], [], [], [], [],[]    # Profile data
 ssdisnamelst, ssunamelst = [],[]                                                        # session
-
-timer,sessionActive = 0,0
+timer,sessionActive,run,cnt = 0,0,0,0
 uiclear = lambda: os.system('cls')
 headsignup = ("+" * 64 + "\n" + "< [ BU-Verse Sign-up ] >".center(64) + "\n" + "+" * 64)
 headlogin = ("|"*64 + "\n" + "< [ BU-Verse Login ] >".center(64) + "\n" + "|"*64)
@@ -66,6 +66,48 @@ def buvs_txtlimitlenght(txtlimit,gettxt):
         newinsert += letter
     newinsert = newinsert[1:]
     return newinsert
+
+def buvs_versemenu(run):
+    print("*"*64)
+    print("[1] Posting something? [2] Explore People [3] My Verse".center(64))
+    print("[4] <<- Newfeed [5] *Refresh feed [6] Oldfeed ->> ".center(64))
+    print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
+    print("*" * 64)
+    vmenu = input("> ")
+    if vmenu == "1":
+        buverse_verseposting()
+    elif vmenu == "2":
+        buverse_verseexplore()
+    elif vmenu == "3":
+        buverse_verseprofile()
+    elif vmenu == "4":
+        if run>2:
+            buverse_callfeedverse4(run)
+        else:
+            print("[ No Latest Post Updated Any more. ]")
+            time.sleep(2)
+            buverse_callfeedverse0(0)
+    elif vmenu == "5":
+        print("[ Updating in Verse.. ]")
+        time.sleep(1.5)
+        buverse_callfeedverse0(0)
+    elif vmenu == "6":
+        buverse_callfeedverse6(run)
+    elif vmenu == "0":
+        buvs_exit()
+    elif vmenu == "00":
+        with open('buvs_recallsession.txt', 'w') as dbrecallss:
+            dbrecallss.flush()
+        print("[ Log-out successflly. ]".center(64))
+        time.sleep(1)
+        buverse_main(0)
+    elif vmenu == "000":
+        with open('buvs_recallsession.txt', 'w') as dbrecallss:
+            dbrecallss.flush()
+        print("[ Log-out successflly. ]".center(64))
+        time.sleep(1.5)
+        buvs_exit()
+    else: buverse_versemain()
 
 ##############################################################################
 #                           BU-Verse 0-Phase                                 #
@@ -141,7 +183,7 @@ def buverse_recallsession():
 ##############################################################################
 def buverse_main(sessionActive):
     if sessionActive == 1:#user
-        buverse_versemain(sessionActive)
+        buverse_versemain()
         buverse_main(sessionActive)
     elif sessionActive == 9:#dev
         uiclear()
@@ -188,7 +230,7 @@ def buverse_signup():       # 0000000000000
     buvs_checklstclear()
     print(headsignup)
     uname = input("Enter Your Username \n> ")
-    with open('buvs_userdb.txt','r') as dbuser:
+    with open('/buvs_userdb.txt','r') as dbuser:
         if uname not in dbuser:
             userlst.append(uname)
             idx = userlst.index(uname)
@@ -273,7 +315,6 @@ def buverse_login():
                 pwkeylst.append(pwkeydata[0])
             else: break
         print(userlst)
-        #print(pwkeylst)
     with open('buvs_xlogindb.txt','r')as dbxlog:
         while True:
             xdata = dbxlog.readline().split()
@@ -283,7 +324,6 @@ def buverse_login():
                 devdislst.append(xdata[2])
             else:break
         print(devuserxlst)
-        #print(devpwxlst)
     print(headlogin)
     print('')
     username = input("USERNAME : ".rjust(24))
@@ -356,35 +396,7 @@ def buverse_login():
 ##############################################################################
 #                           BU-Verse Verse-Phase                             #
 ##############################################################################
-
-def buvs_versemenu():
-    print("*"*64)
-    print("[1] Posting something? [2] Explore People [3] My Verse".center(64))
-    print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
-    print("*" * 64)
-    vmenu = input("> ")
-    if vmenu == "1":
-        buverse_verseposting()
-    elif vmenu == "2":
-        buverse_verseexplore()
-    elif vmenu == "3":
-        buverse_verseprofile()
-    elif vmenu == "0":
-        buvs_exit()
-    elif vmenu == "00":
-        with open('buvs_recallsession.txt', 'w') as dbrecallss:
-            dbrecallss.flush()
-        print("[ Log-out successflly. ]".center(64))
-        time.sleep(1.5)
-        buverse_main(0)
-    elif vmenu == "000":
-        with open('buvs_recallsession.txt', 'w') as dbrecallss:
-            dbrecallss.flush()
-        print("[ Log-out successflly. ]".center(64))
-        time.sleep(1.5)
-        buvs_exit()
-
-def buverse_versemain(sessionActive):
+def buverse_versemain():
     while True:
         uiclear()
         buvs_checklstclear()
@@ -401,42 +413,126 @@ def buverse_versemain(sessionActive):
                 while True:
                     getrawpost = dbposting.readline().split("|*|")
                     if getrawpost != ['']:
-                        #print(getrawpost)
                         postdisnamelst.append(getrawpost[0])
                         posttimelst.append(getrawpost[1])
                         getpostfeed = getrawpost[2].replace("\n","")
                         postfeedlst.append(getpostfeed)
                     else:break
                 postdisnamelst.reverse();posttimelst.reverse();postfeedlst.reverse()
-            for run in range(len(postfeedlst)):
-                print("_"*64)
-                print("[ From",postdisnamelst[run],"At",posttimelst[run]+" ]")
-                print(">",buvs_txtlimitlenght(58,postfeedlst[run]))
+            time.sleep(0.4)
+            buverse_callfeedverse0(run=0)
         else:
             print("\n")
             print("[ No one posts in verse ]".center(64))
             print("\n"*2)
-        buvs_versemenu()
+        buvs_versemenu(run)
+
+def buverse_callfeedverse0(run):
+    while True:
+        uiclear()
+        postfulltime = datetime.datetime.now()
+        postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
+        print("#" * 64)
+        print("[ BU-Verse ]".center(64))
+        print(postlocaltime.center(64))
+        print(("[ %s ]" % ssdisname).center(64))
+        print("* Latest Post Updated. \r")
+        lenfeed = len(postfeedlst)
+        cnt = 0
+        print("start run = ", run)
+        time.sleep(0.2)
+        for run in range(run, lenfeed):             #default runpost
+            print("_" * 64)
+            print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
+            print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
+            cnt += 1
+            if cnt == 3:break
+        print("end run =", run)
+        buvs_versemenu(run)
+
+def buverse_callfeedverse4(run):
+    while True:
+        uiclear()
+        postfulltime = datetime.datetime.now()
+        postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
+        print("#" * 64)
+        print("[ BU-Verse ]".center(64))
+        print(postlocaltime.center(64))
+        print(("[ %s ]" % ssdisname).center(64))
+        lenfeed = len(postfeedlst)
+        cnt = 0
+        print("start run4 = ", run)
+        time.sleep(0.4)
+        #for runpost in range(run-4,run+2, 1):           #back runpost
+        for runpost in range(run,lenfeed, -1):           #back runpost
+            if run < 0:
+                print("[ No Latest Post Updated Any more. ]")
+                time.sleep(2)
+                buverse_callfeedverse0(0)
+            print("_" * 64)
+            print("[ From", postdisnamelst[runpost], "At", posttimelst[runpost] + " ]")
+            print(">", buvs_txtlimitlenght(58, postfeedlst[runpost]))
+            cnt += 1
+            if cnt == 3:break
+        print("end run4 =", run)
+        buvs_versemenu(run)
+
+def buverse_callfeedverse6(run):
+    while True:
+        uiclear()
+        postfulltime = datetime.datetime.now()
+        postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
+        print("#" * 64)
+        print("[ BU-Verse ]".center(64))
+        print(postlocaltime.center(64))
+        print(("[ %s ]" % ssdisname).center(64))
+        lenfeed = len(postfeedlst)
+        print("start run = ", run)
+        cnt = 0
+        if run > lenfeed:
+            print("No Oldest Post Any more.")
+            #run = lenfeed
+            for run in range(-3, -1,1):  # next runpost
+                print("_" * 64)
+                print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
+                print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
+                cnt += 1
+                if cnt == 3:
+                    break
+            run = lenfeed-3
+        for run in range(run+1, lenfeed):           #next runpost
+            print("_" * 64)
+            print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
+            print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
+            cnt += 1
+            if cnt == 3:
+                break
+        print("end run =", run)
+        if run > lenfeed:
+            print('[ This feed Most oldest ].'.center(64))
+            break
+        else:
+            buvs_versemenu(run)
 
 def buverse_verseposting():
     uiclear()
     postfulltime = datetime.datetime.now()
     postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
-    with open('buvs_postingversedb.txt','a+')as dbpostingverse:
+    with open('buvs_postingversedb.txt','a+',buffering=1)as dbpostingverse:
         print("#"*64)
         print("[ BU-Verse ]".center(64))
         print(postlocaltime.center(64))
         print("="*64)
         print((">>>> %s Posting in Verse? >>>>>>>>>>>>>>>>>>>>>>>>" %ssdisname).center(64))
         getpostverse = input("> ")
-        recheckgetpostverse = input("Press [1] Post or [Any key] Cancel\n> ")
-        if recheckgetpostverse == "1":
-            dbpostingverse.write(ssdisname+"|*|"+postlocaltime+"|*|"+getpostverse+"\n")
+        recheckgetpostverse = input("Press [Any Key] Post or [0] Cancel\n> ")
+        if recheckgetpostverse == "0":
             uiclear()
-            buverse_versemain(1)
+            buverse_versemain()
         else:
+            dbpostingverse.write(ssdisname + "|*|" + postlocaltime + "|*|" + getpostverse + "\n")
             uiclear()
-            buverse_versemain(1)
+            buverse_versemain()
 
 def buverse_verseexplore():
     input()

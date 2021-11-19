@@ -56,7 +56,7 @@ def buvs_exit():
     uiclear()
     time.sleep(0.20)
     print("." * 64)
-    exit("[ Exiting the BU-Verse.. ]".center(64) + "\n" + "." * 64)
+    sys.exit("[ Exiting the BU-Verse.. ]".center(64) + "\n" + "." * 64)
 
 def buvs_txtlimitlenght(txtlimit,gettxt):
     newinsert = ""

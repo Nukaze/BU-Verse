@@ -16,9 +16,9 @@ devuserxlst, devpwxlst, devdislst = [], [],[]                                   
 namelst, snamelst,disnamelst, majorlst, facultylst, majorlst = [], [], [], [], [],[]    # Profile data
 ssdisnamelst, ssunamelst = [],[]                                                        # session
 timer,sessionActive,run,cnt = 0,0,0,0
-uiclear = lambda: os.system('cls')
-headsignup = ("+" * 64 + "\n" + "< [ BU-Verse Sign-up ] >".center(64) + "\n" + "+" * 64)
-headlogin = ("|"*64 + "\n" + "< [ BU-Verse Login ] >".center(64) + "\n" + "|"*64)
+uicls = lambda: os.system('cls')
+headsignup = ("+" * 64 + "\n\n" + "< [ BU-Verse Sign-up ] >".center(64) + "\n\n" + "+" * 64)
+headlogin = ("|"*64 + "\n\n" + "< [ BU-Verse Login ] >".center(64) + "\n\n" + "|"*64)
 
 ##############################################################################
 #                           BU-Verse Tools-Phase                             #
@@ -27,11 +27,11 @@ def getfile(filecall):
     return os.stat(filecall).st_size
 
 def loading_progress(timer,interval,delay):
-    print("[",end="")
+    print("[".rjust(18),end="")
     for i in range(timer):
         time.sleep(interval)
-        loadprogress = "■" * i * 4
-        print("%s" % loadprogress, end="")
+        loadder = "■" * i
+        print("%s" %loadder, end="")
     print("]")
     time.sleep(delay)
 
@@ -44,7 +44,7 @@ def buvs_navigate():
     nav = input("( [M] back to Main menu )\n( [x] to exit. )\n> ")
     while True:
         if nav.upper() == "M":
-            print("[ Going back to Main menu ]")
+            print("[ Going back to Main menu ]".center(64))
             time.sleep(1.5)
             buverse_main(sessionActive)
         elif nav.upper() == "X":
@@ -53,7 +53,7 @@ def buvs_navigate():
 
 def buvs_exit():
     time.sleep(0.25)
-    uiclear()
+    uicls()
     time.sleep(0.20)
     print("." * 64)
     sys.exit("[ Exiting the BU-Verse.. ]".center(64) + "\n" + "." * 64)
@@ -69,9 +69,11 @@ def buvs_txtlimitlenght(txtlimit,gettxt):
 
 def buvs_versemenu(run):
     print("*"*64)
+    print()
     print("[1] Posting something? [2] Explore People [3] My Verse".center(64))
     print("[4] <<- Newfeed [5] *Refresh feed [6] Oldfeed ->> ".center(64))
     print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
+    print()
     print("*" * 64)
     vmenu = input("> ")
     if vmenu == "1":
@@ -132,7 +134,6 @@ def buverse_recallsession():
                             pwkeylst.append(pwkeydata[0])
                         else:
                             break
-                    dbkey.close()
                 with open('buvs_xlogindb.txt', 'r') as dbxlog:
                     while True:
                         xdata = dbxlog.readline().split()
@@ -150,32 +151,32 @@ def buverse_recallsession():
                         ssuname = "".join(ssunamelst)
                         ssdisnamelst.append(disnamelst[idx])
                         ssdisname = "".join(ssdisnamelst)
-                        print(" "*19,end="");loading_progress(4,0.05,0.2)
+                        loading_progress(8,0.01,0.1)
                         print("[ Recalling Profile logging-in.. ]".center(64))
                         time.sleep(0.4)
                         print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
-                        time.sleep(0.7)
-                        uiclear()
+                        time.sleep(1)
+                        uicls()
                         buverse_main(sessionRecall)         #userrecall
-                    elif recusername in devuserxlst:
-                        idx = devuserxlst.index(recusername)
-                        if recpwkeylog == devpwxlst[idx]:       #check old session
-                            ssunamelst.append(recusername)
-                            ssuname = "".join(ssunamelst)
-                            ssdisnamelst.append(devdislst[idx])
-                            ssdisname = "".join(ssdisnamelst)
-                            print("[ Password Matched logging-in.. ]".center(64))
-                            time.sleep(0.25)
-                            print(("[ Welcome back Dev %s ]" % ssdisname).center(64))
-                            print("|" * 64)
-                            input("# Press Any key to continue  > ")
-                            uiclear()
-                            buverse_main(sessionRecall)     #devrecall
-                        else: buverse_main(0)
-                    else:
-                        buverse_main(0)
+                elif recusername in devuserxlst:
+                    idx = devuserxlst.index(recusername)
+                    if recpwkeylog == devpwxlst[idx]:       #check old session
+                        ssunamelst.append(recusername)
+                        ssuname = "".join(ssunamelst)
+                        ssdisnamelst.append(devdislst[idx])
+                        ssdisname = "".join(ssdisnamelst)
+                        print("[ Password Matched logging-in.. ]".center(64))
+                        time.sleep(0.25)
+                        print(("[ Welcome back Dev %s ]" % ssdisname).center(64))
+                        print("|" * 64)
+                        input("# Press Any key to continue  > ")
+                        uicls()
+                        buverse_main(sessionRecall)     #devrecall
+                    else: buverse_main(0)
                 else:
                     buverse_main(0)
+            else:
+                buverse_main(0)
     else: buverse_main(0)
 
 ##############################################################################
@@ -186,37 +187,39 @@ def buverse_main(sessionActive):
         buverse_versemain()
         buverse_main(sessionActive)
     elif sessionActive == 9:#dev
-        uiclear()
-        print("sessionActive =", sessionActive)
+        uicls()
+        #print("sessionActive =", sessionActive)
         print("#"*64)
         print("< [ BU-Verse Developer mode ] >".center(64))
         print(("< [ Welcome Back %s ] >"%ssdisname).center(64))
         print("#" * 64)
-        print("/" * 64)
-        print("/" * 64)
-        print("\\" * 64)
-        print("\\" * 64)
+        print("\n\n\n")
         input("Enter Main Bu-verse")
         buverse_main(sessionActive)
     else:
-        uiclear()
+        uicls()
         buvs_checklstclear()
-        print("sessionActive =",sessionActive)
+        #print("sessionActive =",sessionActive)
         print("#" * 64)
+        print()
         print("< [ Welcome to BU-Verse ] >".center(64))
         print("* Please Login to continue! ".center(64))
+        print()
         print("#" * 64)
-        print("[1] Log-in")
-        print("[2] Sign-up")
-        print("[0] Exit the Program")
+        print()
+        print(" "*19+"[1] Log-in")
+        print(" "*19+"[2] Sign-up")
+        print(" "*19+"[0] Exit the Program")
+        print()
+        print("-"*64)
         gout = input("Press select menu : ")
         if gout == "1":
-            print("[ Going to Login.. ]")
-            loading_progress(4,0.1,0.2)
+            print("[ Going to Login.. ]".center(64))
+            loading_progress(8,0.02,0.2)
             buverse_login()
         elif gout == "2":
-            print("[ Going to Sign-up.. ]")
-            loading_progress(4,0.3,0.5)
+            print("[ Going to Sign-up.. ]".center(64))
+            loading_progress(8,0.05,0.3)
             buverse_signup()
         elif gout == "0":
             buvs_exit()
@@ -226,41 +229,65 @@ def buverse_main(sessionActive):
             buverse_main(sessionActive)
 
 def buverse_signup():       # 0000000000000
-    uiclear()
+    uicls()
     buvs_checklstclear()
     print(headsignup)
-    uname = input("Enter Your Username \n> ")
-    with open('/buvs_userdb.txt','r') as dbuser:
-        if uname not in dbuser:
+    with open('buvs_userdb.txt', 'r') as dbuser, open('buvs_keydb.txt', 'r') as dbkey,open('buvs_idcdb.txt', 'r')as dbidc:
+        while True:
+            userdata = dbuser.readline().split()
+            pwkeydata = dbkey.readline().split()
+            idcdata = dbidc.readline().split()
+            if userdata != [] and pwkeydata != []:
+                userlst.append(userdata[0])
+                disnamelst.append(userdata[1])
+                pwkeylst.append(pwkeydata[0])
+                idclst.append(idcdata[0])
+            else:
+                break
+        uname = input("Enter Your Username \n> ")
+        if uname not in userlst:
             userlst.append(uname)
             idx = userlst.index(uname)
             buverse_getpwkey(idx)
         else:
+            print("")
             strx64 = "x"*64
             print(strx64.center(64))
             print("[ Sorry, this Username is already taken. ]".center(64))
             print("[ Please try again. ]".center(64))
-            print(strx64.center(64))
-            print("")
-            buverse_signup()
+            while True:
+                print()
+                print("\\" * 64)
+                nav = input("( Choose [T] Try again or [M] back to Main menu )\n > ")
+                if nav.upper() == "T":
+                    buverse_signup()
+                elif nav.upper() == "M":
+                    buverse_main(0)
+                else:
+                    continue
         getidcard()
         getdisname()
-        print(userlst, pwkeylst, idclst, disnamelst)
-        input("wait")
-        dbuser = open('buvs_userdb.txt', 'a');dbkey = open('buvs_keydb.txt', 'a');dbidc = open('buvs_idcdb.txt', 'a')
-        dbuser.write(userlst[idx]+" "+disnamelst[idx]+"\n")
-        dbkey.write(pwkeylst[idx]+"\n")
-        dbidc.write(idclst[idx]+"\n")
-        dbuser.close();dbkey.close();dbidc.close()
-    print("[ BU-Verse Sign-up Successfully. ]")
-    time.sleep(0.5)
-    input("Please Any key to Back to menu")
+        with open('buvs_userdb.txt', 'a')as dbuser, open('buvs_keydb.txt', 'a')as dbkey, open('buvs_idcdb.txt', 'a')as dbidc:
+            dbuser.write(userlst[idx]+" "+disnamelst[idx]+" \n")
+            dbkey.write(pwkeylst[idx]+" \n")
+            dbidc.write(idclst[idx]+" \n")
+        print("[ BU-Verse Sign-up Successfully. ]")
+        time.sleep(0.5)
+        while True:
+            print("\\" * 64)
+            nav = input("( Choose [L] Log-in or [M] back to Main menu )\n > ")
+            if nav.upper() == "L":
+                buverse_login()
+            elif nav.upper() == "M":
+                buverse_main(0)
+            else:
+                continue
     buverse_main(sessionActive)
 
 def buverse_getpwkey(idx):
     pwkey1 = prompt("Enter Your Password (Must have more than 8 characters) \n> ",is_password = True)
     while len(pwkey1) < 8:
-        uiclear()
+        uicls()
         print(headsignup)
         print("Enter Your Username \n> " + userlst[idx],end="\n")
         print("!! Password Must have more than 8 characters.")
@@ -270,7 +297,7 @@ def buverse_getpwkey(idx):
         pwhashed = pwhash(pwkey1)
         pwkeylst.append(pwhashed)
     else:
-        uiclear()
+        uicls()
         print(headsignup)
         print("Enter Your Username \n> " + userlst[idx])
         print("[ # Those passwords didn't match!! Please try again. ]")
@@ -278,22 +305,11 @@ def buverse_getpwkey(idx):
 
 def getidcard():
     idc = input("Enter Your ID card Number (Must be number and more equal 13 character) \n> ")
-    while len(idc) != 13 or idc.isalpha():
-        print("ID card must have 13 characters and number only")
+    while len(idc) != 13 or not idc.isdecimal():
+        print("* ID card must have 13 characters and number only")
         idc = input("Enter Your ID card Number (Must be number and more equal 13 character) \n> ")
-    idclst.append(idc)
-
-def getdisname():
-    disname = input("Enter Your Name to display on profile (Can edit after) \n> ")
-    disnamecntlst = disname.count(" ")
-    print(disnamecntlst)
-    while not disname or disnamecntlst != 0:
-        print(disname)
-        print("** Display Name \"BlankSpace\" not allowed.")
-        disname = input("Enter Your Name to display on profile (Can edit after) \n> ")
-        disnamecntlst = disname.count(" ")
-        print(disnamecntlst)
-    disnamelst.append(disname)
+    idchashed = pwhash(idc)
+    idclst.append(idchashed)
 
 def pwhash(pwkey1):
     return hashlib.sha256(str.encode(pwkey1)).hexdigest()
@@ -301,8 +317,18 @@ def pwhash(pwkey1):
 def pwdehash(pwkeyi, dehash):
     return pwhash(pwkeyi) == dehash
 
+def getdisname():
+    disname = input("Enter Your Name to display on profile (Can edit after) \n> ")
+    disnamecntlst = disname.count(" ")
+    while not disname or disnamecntlst != 0:
+        print(disname)
+        print("** Display Name \"BlankSpace\" not allowed.")
+        disname = input("Enter Your Name to display on profile (Can edit after) \n> ")
+        disnamecntlst = disname.count(" ")
+    disnamelst.append(disname)
+
 def buverse_login():
-    uiclear()
+    uicls()
     buvs_checklstclear()
     ssunamelst.clear();ssdisnamelst.clear()
     with open('buvs_userdb.txt','r')as dbuser,open('buvs_keydb.txt','r')as dbkey:
@@ -314,7 +340,6 @@ def buverse_login():
                 disnamelst.append(userdata[1])
                 pwkeylst.append(pwkeydata[0])
             else: break
-        print(userlst)
     with open('buvs_xlogindb.txt','r')as dbxlog:
         while True:
             xdata = dbxlog.readline().split()
@@ -323,7 +348,6 @@ def buverse_login():
                 devpwxlst.append(xdata[1])
                 devdislst.append(xdata[2])
             else:break
-        print(devuserxlst)
     print(headlogin)
     print('')
     username = input("USERNAME : ".rjust(24))
@@ -345,12 +369,11 @@ def buverse_login():
             print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
             print("|"*64)
             time.sleep(2.5)
-            uiclear()
+            uicls()
             buverse_main(1)
         else:
             print("[ Logging-in Failed. ]".center(64))
             print("[ Wrong Password, Please try again.. ]".center(64))
-            print("|" * 64)
             time.sleep(0.5)
             while True:
                 print("\\" * 64)
@@ -375,12 +398,11 @@ def buverse_login():
             print(("[ Welcome back Dev %s ]"%ssdisname).center(64))
             print("|" * 64)
             input("# Press Any key to continue  > ")
-            uiclear()
+            uicls()
             buverse_main(9)
         else:
             print("[ Logging-in Failed. ]".center(64))
             print("[ Wrong Password, Please try again.. ]".center(64))
-            print("|" * 64)
             while True:
                 print("\\" * 64)
                 nav = input("( Choose [T] Try again or [M] back to Main menu )\n > ")
@@ -392,15 +414,22 @@ def buverse_login():
     else:
         print("[ Sorry, Username not found. ]".center(64))
         time.sleep(.5)
-        buvs_navigate()
+        while True:
+            print("\\" * 64)
+            nav = input("( Choose [T] Try again or [M] back to Main menu )\n > ")
+            if nav.upper() == "T":
+                buverse_login()
+            elif nav.upper() == "M":
+                buverse_main(0)
+            else:
+                continue
 ##############################################################################
 #                           BU-Verse Verse-Phase                             #
 ##############################################################################
 def buverse_versemain():
     while True:
-        uiclear()
+        uicls()
         buvs_checklstclear()
-        #print("session =", sessionActive)   #sessioncheck
         postfulltime = datetime.datetime.now()
         postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
         print("#" * 64)
@@ -429,7 +458,7 @@ def buverse_versemain():
 
 def buverse_callfeedverse0(run):
     while True:
-        uiclear()
+        uicls()
         postfulltime = datetime.datetime.now()
         postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
         print("#" * 64)
@@ -445,6 +474,7 @@ def buverse_callfeedverse0(run):
             print("_" * 64)
             print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
             print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
+            print("\n")
             cnt += 1
             if cnt == 3:break
         print("end run =", run)
@@ -452,7 +482,7 @@ def buverse_callfeedverse0(run):
 
 def buverse_callfeedverse4(run):
     while True:
-        uiclear()
+        uicls()
         postfulltime = datetime.datetime.now()
         postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
         print("#" * 64)
@@ -479,7 +509,7 @@ def buverse_callfeedverse4(run):
 
 def buverse_callfeedverse6(run):
     while True:
-        uiclear()
+        uicls()
         postfulltime = datetime.datetime.now()
         postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
         print("#" * 64)
@@ -515,7 +545,7 @@ def buverse_callfeedverse6(run):
             buvs_versemenu(run)
 
 def buverse_verseposting():
-    uiclear()
+    uicls()
     postfulltime = datetime.datetime.now()
     postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
     with open('buvs_postingversedb.txt','a+',buffering=1)as dbpostingverse:
@@ -523,15 +553,15 @@ def buverse_verseposting():
         print("[ BU-Verse ]".center(64))
         print(postlocaltime.center(64))
         print("="*64)
-        print((">>>> %s Posting in Verse? >>>>>>>>>>>>>>>>>>>>>>>>" %ssdisname).center(64))
+        print((">>>> %s Posting in Verse? >>>>>>>>>>>>>>>>>>>" %ssdisname).center(64))
         getpostverse = input("> ")
         recheckgetpostverse = input("Press [Any Key] Post or [0] Cancel\n> ")
         if recheckgetpostverse == "0":
-            uiclear()
+            uicls()
             buverse_versemain()
         else:
             dbpostingverse.write(ssdisname + "|*|" + postlocaltime + "|*|" + getpostverse + "\n")
-            uiclear()
+            uicls()
             buverse_versemain()
 
 def buverse_verseexplore():

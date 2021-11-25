@@ -109,12 +109,16 @@ def buvs_versemenu(rpoint):
         with open('buvs_recallsession.txt', 'w') as dbrecallss:
             dbrecallss.flush()
         print("[ Log-out successflly. ]".center(64))
+        time.sleep(0.5)
+        print("[ Back to Menu.. ]".center(64))
         time.sleep(1)
         buverse_main(0)
     elif vmenu == "000":
         with open('buvs_recallsession.txt', 'w') as dbrecallss:
             dbrecallss.flush()
         print("[ Log-out successflly. ]".center(64))
+        time.sleep(0.5)
+        print("[ Exitting.. ]".center(64))
         time.sleep(1.5)
         buvs_exit()
     else: buverse_versemain()
@@ -471,7 +475,7 @@ def buvs_maintitle(headtitle):
     print("#" * 64)
     print(("[ %s ]"%headtitle).center(64))
     print(postlocaltime.center(64))
-    print(("------------------[ %s ]-------------------" % ssdisname).center(64))
+    print(("--------[ %s ]--------" % ssdisname).center(64))
 
 def buverse_callfeedverse0(rpoint):
     while True:
@@ -536,7 +540,6 @@ def buverse_callfeedverse6(rpoint):
         cnt = 0
         time.sleep(0.1)
         if rpoint >= lenfeed-1:
-            print("if6")
             rpoint = lenfeed-2
             for run in range(rpoint, lenfeed,1):  # next runpost
                 print("_" * 64)
@@ -568,7 +571,7 @@ def buverse_verseposting():
         print("[ BU-Verse ]".center(64))
         print(postlocaltime.center(64))
         print("="*64)
-        print((">>>> %s Posting in Verse? >>>>>>>>>>>>>>>>>>>" %ssdisname).center(64))
+        print((">>>> %s Posting in Verse? >>>>>>>>>>>>>>>>" %ssdisname).center(64))
         getpostverse = input("> ")
         recheckgetpostverse = input("Press [Any Key] Post or [0] Cancel\n> ")
         if recheckgetpostverse == "0":
@@ -578,10 +581,6 @@ def buverse_verseposting():
             dbpostingverse.write(ssdisname + "|*|" + postlocaltime + "|*|" + getpostverse + "\n")
             uicls()
             buverse_versemain()
-
-def buvs_navpro():
-    while True:
-        print()
 
 def buvs_callprofile():
     buvs_checklstclear()
@@ -600,16 +599,22 @@ def buverse_verseexplore():
     input()
     pass
 
+def buvs_navprofile():
+    print("[1] Edit Display name? [2] Explore People [3] Back to Verse".center(64))
+    print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
+
 def buverse_verseprofile():
     uicls()
     buvs_maintitle("My-Verse")
     buvs_callprofile()
     print("\n| Username : "+userlst[idx])
     print("| Display name : "+disnamelst[idx])
-    print("\n\n")
-    print("[1] Edit Display name? [2] Explore People [3] Back to Verse".center(64))
-    print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
-    gpro = input()
+    print("\n")
+    print("*" * 64)
+    print()
+    buvs_navprofile()
+    print("*"*64)
+    gpro = input("\n> ")
     if gpro == "1":
         while True:
             uicls()
@@ -618,8 +623,6 @@ def buverse_verseprofile():
             print("\n| Username : " + userlst[idx])
             print("| Display name : " + disnamelst[idx])
             print("\n")
-            print("[1] Edit Display name? [2] Explore People [3] Back to Verse".center(64))
-            print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
             disname = input("Edit Your Display Name (* Display Name \"BlankSpace\" not allowed.)\n> ")
             disnamecntlst = disname.count(" ")
             while not disname or disnamecntlst != 0:
@@ -627,7 +630,7 @@ def buverse_verseprofile():
                 disname = input("Edit Your Display Name (* Display Name \"BlankSpace\" not allowed.)\n> ")
                 disnamecntlst = disname.count(" ")
             disnamelst[idx] = disname
-            cfdisname = input("Press [Any Key] to confirm or [0] Cancel")
+            cfdisname = input("Press [Any Key] to confirm or [0] Cancel\n> ")
             if cfdisname == "0":
                 buverse_verseprofile()
             else:
@@ -636,7 +639,7 @@ def buverse_verseprofile():
                         dbuser.write(userlst[i] + " " + disnamelst[i] + " \n")
                     print("[ Your Display Name has been Change. ]".center(64))
                 break
-        time.sleep(1)
+        time.sleep(1.5)
     elif gpro == "2":
         buverse_verseexplore()
     elif gpro == "3":
@@ -647,12 +650,16 @@ def buverse_verseprofile():
         with open('buvs_recallsession.txt', 'w') as dbrecallss:
             dbrecallss.flush()
         print("[ Log-out successflly. ]".center(64))
+        time.sleep(0.5)
+        print("[ Back to Menu.. ]".center(64))
         time.sleep(1)
         buverse_main(0)
     elif gpro == "000":
         with open('buvs_recallsession.txt', 'w') as dbrecallss:
             dbrecallss.flush()
         print("[ Log-out successflly. ]".center(64))
+        time.sleep(0.5)
+        print("[ Exitting.. ]".center(64))
         time.sleep(1.25)
         buvs_exit()
     else:buverse_verseprofile()

@@ -29,7 +29,7 @@ def getfile(filecall):
     return os.stat(filecall).st_size
 
 def loading_progress(timer,interval,delay):
-    print("[",end="")
+    print("[".rjust(10),end="")
     for i in range(timer):
         time.sleep(interval)
         loadder = "■" * i
@@ -163,7 +163,7 @@ def buverse_recallsession():
                         ssuname = "".join(ssunamelst)
                         ssdisnamelst.append(disnamelst[idx])
                         ssdisname = "".join(ssdisnamelst)
-                        print(" ".rjust(20),end="");loading_progress(7,0.01,0.1)
+                        loading_progress(7,0.01,0.1)
                         print("[ Recalling Profile logging-in.. ]".center(64))
                         time.sleep(0.4)
                         print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
@@ -227,11 +227,11 @@ def buverse_main(sessionActive):
         gout = input("Press select menu : ")
         if gout == "1":
             print("[ Going to Login.. ]".center(64))
-            print(" ".rjust(20),end="");loading_progress(7,0.02,0.2)
+            loading_progress(7,0.02,0.2)
             buverse_login()
         elif gout == "2":
             print("[ Going to Sign-up.. ]".center(64))
-            print(" ".rjust(20),end="");loading_progress(7,0.05,0.2)
+            loading_progress(7,0.05,0.2)
             buverse_signup()
         elif gout == "0":
             buvs_exit()
@@ -283,7 +283,9 @@ def buverse_signup():       # 0000000000000
             dbuser.write(userlst[idx]+" "+disnamelst[idx]+" \n")
             dbkey.write(pwkeylst[idx]+" \n")
             dbidc.write(idclst[idx]+" \n")
+        print()
         print("[ BU-Verse Sign-up Successfully. ]")
+        print()
         time.sleep(0.5)
         while True:
             print("\\" * 64)
@@ -376,9 +378,11 @@ def buverse_login():
             ssdisname = "".join(ssdisnamelst)
             dbrecallss = open('buvs_recallsession.txt','w')
             dbrecallss.write("1"+" "+username+" "+pwkeylst[idx])
+            print()
             print("[ Password Matched logging-in.. ]".center(64))
             time.sleep(0.5)
             print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
+            print()
             print("|"*64)
             time.sleep(2)
             uicls()
@@ -573,6 +577,7 @@ def buverse_verseposting():
         print("="*64)
         print((">>>> %s Posting in Verse? >>>>>>>>>>>>>>>>" %ssdisname).center(64))
         getpostverse = input("> ")
+        print("-"*64)
         recheckgetpostverse = input("Press [Any Key] Post or [0] Cancel\n> ")
         if recheckgetpostverse == "0":
             uicls()
@@ -613,8 +618,9 @@ def buverse_verseprofile():
     print("*" * 64)
     print()
     buvs_navprofile()
+    print()
     print("*"*64)
-    gpro = input("\n> ")
+    gpro = input("> ")
     if gpro == "1":
         while True:
             uicls()
@@ -630,6 +636,7 @@ def buverse_verseprofile():
                 disname = input("Edit Your Display Name (* Display Name \"BlankSpace\" not allowed.)\n> ")
                 disnamecntlst = disname.count(" ")
             disnamelst[idx] = disname
+            print("-" * 64)
             cfdisname = input("Press [Any Key] to confirm or [0] Cancel\n> ")
             if cfdisname == "0":
                 buverse_verseprofile()

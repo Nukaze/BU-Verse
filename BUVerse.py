@@ -27,7 +27,7 @@ def getfile(filecall):
     return os.stat(filecall).st_size
 
 def loading_progress(timer,interval,delay):
-    print("[".rjust(18),end="")
+    print("[",end="")
     for i in range(timer):
         time.sleep(interval)
         loadder = "■" * i
@@ -67,11 +67,11 @@ def buvs_txtlimitlenght(txtlimit,gettxt):
     newinsert = newinsert[1:]
     return newinsert
 
-def buvs_versemenu(run):
+def buvs_versemenu(rpoint):
     print("*"*64)
     print()
     print("[1] Posting something? [2] Explore People [3] My Verse".center(64))
-    print("[4] <<- Newfeed [5] *Refresh feed [6] Oldfeed ->> ".center(64))
+    print("[4] <<- Newfeed   [5] *Refresh feed    [6] Oldfeed ->> ".center(64))
     print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
     print()
     print("*" * 64)
@@ -83,18 +83,24 @@ def buvs_versemenu(run):
     elif vmenu == "3":
         buverse_verseprofile()
     elif vmenu == "4":
-        if run>2:
-            buverse_callfeedverse4(run)
+        if rpoint>=0:
+            buverse_callfeedverse4(rpoint)
         else:
             print("[ No Latest Post Updated Any more. ]")
-            time.sleep(2)
+            time.sleep(1.25)
             buverse_callfeedverse0(0)
     elif vmenu == "5":
-        print("[ Updating in Verse.. ]")
-        time.sleep(1.5)
+        print("[ Updating Verse.. ]")
+        time.sleep(1)
         buverse_callfeedverse0(0)
     elif vmenu == "6":
-        buverse_callfeedverse6(run)
+        if rpoint > len(postfeedlst)-1:
+            print("[ * This is oldest post in BU-Verse. ]")
+            time.sleep(1.25)
+            buverse_callfeedverse6(rpoint)
+        else:
+            buverse_callfeedverse6(rpoint)
+
     elif vmenu == "0":
         buvs_exit()
     elif vmenu == "00":
@@ -151,7 +157,7 @@ def buverse_recallsession():
                         ssuname = "".join(ssunamelst)
                         ssdisnamelst.append(disnamelst[idx])
                         ssdisname = "".join(ssdisnamelst)
-                        loading_progress(8,0.01,0.1)
+                        print(" ".rjust(20),end="");loading_progress(7,0.01,0.1)
                         print("[ Recalling Profile logging-in.. ]".center(64))
                         time.sleep(0.4)
                         print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
@@ -215,11 +221,11 @@ def buverse_main(sessionActive):
         gout = input("Press select menu : ")
         if gout == "1":
             print("[ Going to Login.. ]".center(64))
-            loading_progress(8,0.02,0.2)
+            print(" ".rjust(20),end="");loading_progress(7,0.02,0.2)
             buverse_login()
         elif gout == "2":
             print("[ Going to Sign-up.. ]".center(64))
-            loading_progress(8,0.05,0.3)
+            print(" ".rjust(20),end="");loading_progress(7,0.05,0.2)
             buverse_signup()
         elif gout == "0":
             buvs_exit()
@@ -368,7 +374,7 @@ def buverse_login():
             time.sleep(0.5)
             print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
             print("|"*64)
-            time.sleep(2.5)
+            time.sleep(2)
             uicls()
             buverse_main(1)
         else:
@@ -448,15 +454,25 @@ def buverse_versemain():
                         postfeedlst.append(getpostfeed)
                     else:break
                 postdisnamelst.reverse();posttimelst.reverse();postfeedlst.reverse()
-            time.sleep(0.4)
-            buverse_callfeedverse0(run=0)
+            time.sleep(0.2)
+            buverse_callfeedverse0(rpoint=0)
         else:
             print("\n")
             print("[ No one posts in verse ]".center(64))
             print("\n"*2)
         buvs_versemenu(run)
 
-def buverse_callfeedverse0(run):
+def buverse_callfeedall():
+    uicls()
+    postfulltime = datetime.datetime.now()
+    postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
+    print("#" * 64)
+    print("[ BU-Verse ]".center(64))
+    print(postlocaltime.center(64))
+    print(("[ %s ]" % ssdisname).center(64))
+    print("* Latest Post Updated. \r")
+
+def buverse_callfeedverse0(rpoint):
     while True:
         uicls()
         postfulltime = datetime.datetime.now()
@@ -465,22 +481,23 @@ def buverse_callfeedverse0(run):
         print("[ BU-Verse ]".center(64))
         print(postlocaltime.center(64))
         print(("[ %s ]" % ssdisname).center(64))
-        print("* Latest Post Updated. \r")
+        for i in range(1):
+            print("* Latest Post Updated.",end="\r")
+            time.sleep(0.8)
         lenfeed = len(postfeedlst)
         cnt = 0
-        print("start run = ", run)
-        time.sleep(0.2)
-        for run in range(run, lenfeed):             #default runpost
+        time.sleep(0.02)
+        for run in range(0, lenfeed):             #default runpost
             print("_" * 64)
             print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
             print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
-            print("\n")
+            print()
             cnt += 1
+            rpoint = run
             if cnt == 3:break
-        print("end run =", run)
-        buvs_versemenu(run)
+        buvs_versemenu(rpoint)
 
-def buverse_callfeedverse4(run):
+def buverse_callfeedverse4(rpoint):
     while True:
         uicls()
         postfulltime = datetime.datetime.now()
@@ -489,25 +506,23 @@ def buverse_callfeedverse4(run):
         print("[ BU-Verse ]".center(64))
         print(postlocaltime.center(64))
         print(("[ %s ]" % ssdisname).center(64))
-        lenfeed = len(postfeedlst)
         cnt = 0
-        print("start run4 = ", run)
-        time.sleep(0.4)
-        #for runpost in range(run-4,run+2, 1):           #back runpost
-        for runpost in range(run,lenfeed, -1):           #back runpost
+        time.sleep(0.1)
+        for run in range(rpoint-5,rpoint, 1):           #back runpost
             if run < 0:
-                print("[ No Latest Post Updated Any more. ]")
-                time.sleep(2)
+                print("[ * No Latest Post Updated Any more. ]")
+                time.sleep(1)
                 buverse_callfeedverse0(0)
             print("_" * 64)
-            print("[ From", postdisnamelst[runpost], "At", posttimelst[runpost] + " ]")
-            print(">", buvs_txtlimitlenght(58, postfeedlst[runpost]))
+            print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
+            print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
+            print()
             cnt += 1
+            rpoint = run
             if cnt == 3:break
-        print("end run4 =", run)
-        buvs_versemenu(run)
+        buvs_versemenu(rpoint)
 
-def buverse_callfeedverse6(run):
+def buverse_callfeedverse6(rpoint):
     while True:
         uicls()
         postfulltime = datetime.datetime.now()
@@ -517,32 +532,32 @@ def buverse_callfeedverse6(run):
         print(postlocaltime.center(64))
         print(("[ %s ]" % ssdisname).center(64))
         lenfeed = len(postfeedlst)
-        print("start run = ", run)
         cnt = 0
-        if run > lenfeed:
-            print("No Oldest Post Any more.")
-            #run = lenfeed
-            for run in range(-3, -1,1):  # next runpost
+        time.sleep(0.1)
+        if rpoint >= lenfeed-1:
+            print("if6")
+            rpoint = lenfeed-2
+            for run in range(rpoint, lenfeed,1):  # next runpost
                 print("_" * 64)
                 print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
                 print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
+                print()
                 cnt += 1
                 if cnt == 3:
                     break
-            run = lenfeed-3
-        for run in range(run+1, lenfeed):           #next runpost
-            print("_" * 64)
-            print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
-            print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
-            cnt += 1
-            if cnt == 3:
-                break
-        print("end run =", run)
-        if run > lenfeed:
-            print('[ This feed Most oldest ].'.center(64))
-            break
+            rpoint = lenfeed
         else:
-            buvs_versemenu(run)
+            print("else6")
+            for run in range(rpoint+1, lenfeed):           #next runpost
+                print("_" * 64)
+                print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
+                print(">", buvs_txtlimitlenght(58, postfeedlst[run]))
+                print()
+                cnt += 1
+                rpoint = run
+                if cnt == 3:
+                    break
+        buvs_versemenu(rpoint)
 
 def buverse_verseposting():
     uicls()
@@ -565,10 +580,15 @@ def buverse_verseposting():
             buverse_versemain()
 
 def buverse_verseexplore():
+    uicls()
+    print("Explore".center(64))
     input()
     pass
 
 def buverse_verseprofile():
+    uicls()
+    print("#"*64)
+    print("myVerse".center(64))
     input()
     pass
 

@@ -6,6 +6,8 @@ import os
 import time
 import datetime
 import sys
+import fileinput
+import pickle
 ##############################################################################
 #                           BU-Verse Variable-Phase                          #
 ##############################################################################
@@ -13,7 +15,7 @@ navlst = ["T", "M", "X"]                                                        
 postfeedlst, postdisnamelst, posttimelst = [], [], []                                   # contentfeed
 userlst, pwkeylst, idclst = [], [], []                                                  # LoginCheckSystem
 devuserxlst, devpwxlst, devdislst = [], [],[]                                           # DevLoginCheck
-namelst, snamelst,disnamelst, majorlst, facultylst, majorlst = [], [], [], [], [],[]    # Profile data
+namelst, snamelst,disnamelst, majorlst, facultylst = [], [], [], [],[]    # Profile data
 ssdisnamelst, ssunamelst = [],[]                                                        # session
 timer,sessionActive,run,cnt = 0,0,0,0
 uicls = lambda: os.system('cls')
@@ -130,7 +132,7 @@ def buverse_recallsession():
                 sessionRecall = int(recalldata[0])
                 recusername = recalldata[1]
                 recpwkeylog = recalldata[2]
-                with open('buvs_userdb.txt','r')as dbuser,open('buvs_keydb.txt','r')as dbkey:
+                with open('buvs_userdb.txt','r',buffering=1)as dbuser,open('buvs_keydb.txt','r')as dbkey:
                     while True:
                         userdata = dbuser.readline().split()
                         pwkeydata = dbkey.readline().split()
@@ -238,7 +240,7 @@ def buverse_signup():       # 0000000000000
     uicls()
     buvs_checklstclear()
     print(headsignup)
-    with open('buvs_userdb.txt', 'r') as dbuser, open('buvs_keydb.txt', 'r') as dbkey,open('buvs_idcdb.txt', 'r')as dbidc:
+    with open('buvs_userdb.txt', 'r',buffering=1) as dbuser, open('buvs_keydb.txt', 'r') as dbkey,open('buvs_idcdb.txt', 'r')as dbidc:
         while True:
             userdata = dbuser.readline().split()
             pwkeydata = dbkey.readline().split()
@@ -337,7 +339,7 @@ def buverse_login():
     uicls()
     buvs_checklstclear()
     ssunamelst.clear();ssdisnamelst.clear()
-    with open('buvs_userdb.txt','r')as dbuser,open('buvs_keydb.txt','r')as dbkey:
+    with open('buvs_userdb.txt','r',buffering=1)as dbuser,open('buvs_keydb.txt','r')as dbkey:
         while True:
             userdata = dbuser.readline().split()
             pwkeydata = dbkey.readline().split()
@@ -443,7 +445,7 @@ def buverse_versemain():
         print(postlocaltime.center(64))
         print(("[ %s ]" % ssdisname).center(64))
         if getfile('buvs_postingversedb.txt'):
-            with open('buvs_postingversedb.txt','r')as dbposting:
+            with open('buvs_postingversedb.txt','r',buffering=1)as dbposting:
                 postdisnamelst.clear();postfeedlst.clear();posttimelst.clear()
                 while True:
                     getrawpost = dbposting.readline().split("|*|")
@@ -462,15 +464,14 @@ def buverse_versemain():
             print("\n"*2)
         buvs_versemenu(run)
 
-def buverse_callfeedall():
+def buvs_maintitle(headtitle):
     uicls()
     postfulltime = datetime.datetime.now()
     postlocaltime = postfulltime.strftime("%d-%b-%Y") + " " + postfulltime.strftime("( %H:%M:%S )")
     print("#" * 64)
-    print("[ BU-Verse ]".center(64))
+    print(("[ %s ]"%headtitle).center(64))
     print(postlocaltime.center(64))
-    print(("[ %s ]" % ssdisname).center(64))
-    print("* Latest Post Updated. \r")
+    print(("------------------[ %s ]-------------------" % ssdisname).center(64))
 
 def buverse_callfeedverse0(rpoint):
     while True:
@@ -547,7 +548,6 @@ def buverse_callfeedverse6(rpoint):
                     break
             rpoint = lenfeed
         else:
-            print("else6")
             for run in range(rpoint+1, lenfeed):           #next runpost
                 print("_" * 64)
                 print("[ From", postdisnamelst[run], "At", posttimelst[run] + " ]")
@@ -579,18 +579,83 @@ def buverse_verseposting():
             uicls()
             buverse_versemain()
 
+def buvs_navpro():
+    while True:
+        print()
+
+def buvs_callprofile():
+    buvs_checklstclear()
+    with open('buvs_userdb.txt','r',buffering=1)as dbuser:
+        while True:
+            udata = dbuser.readline().split()
+            if udata != []:
+                userlst.append(udata[0])
+                disnamelst.append(udata[1])
+            else:break
+
 def buverse_verseexplore():
     uicls()
-    print("Explore".center(64))
+    buvs_maintitle("Explore-Verse")
+    buvs_callprofile()
     input()
     pass
 
 def buverse_verseprofile():
     uicls()
-    print("#"*64)
-    print("myVerse".center(64))
-    input()
-    pass
+    buvs_maintitle("My-Verse")
+    buvs_callprofile()
+    print("\n| Username : "+userlst[idx])
+    print("| Display name : "+disnamelst[idx])
+    print("\n\n")
+    print("[1] Edit Display name? [2] Explore People [3] Back to Verse".center(64))
+    print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
+    gpro = input()
+    if gpro == "1":
+        while True:
+            uicls()
+            buvs_maintitle("My-Verse")
+            buvs_callprofile()
+            print("\n| Username : " + userlst[idx])
+            print("| Display name : " + disnamelst[idx])
+            print("\n")
+            print("[1] Edit Display name? [2] Explore People [3] Back to Verse".center(64))
+            print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
+            disname = input("Edit Your Display Name (* Display Name \"BlankSpace\" not allowed.)\n> ")
+            disnamecntlst = disname.count(" ")
+            while not disname or disnamecntlst != 0:
+                print(disname)
+                disname = input("Edit Your Display Name (* Display Name \"BlankSpace\" not allowed.)\n> ")
+                disnamecntlst = disname.count(" ")
+            disnamelst[idx] = disname
+            cfdisname = input("Press [Any Key] to confirm or [0] Cancel")
+            if cfdisname == "0":
+                buverse_verseprofile()
+            else:
+                with open('buvs_userdb.txt','w')as dbuser:
+                    for i in range(len(disnamelst)):
+                        dbuser.write(userlst[i] + " " + disnamelst[i] + " \n")
+                    print("[ Your Display Name has been Change. ]".center(64))
+                break
+        time.sleep(1)
+    elif gpro == "2":
+        buverse_verseexplore()
+    elif gpro == "3":
+        buverse_versemain()
+    elif gpro == "0":
+        buvs_exit()
+    elif gpro == "00":
+        with open('buvs_recallsession.txt', 'w') as dbrecallss:
+            dbrecallss.flush()
+        print("[ Log-out successflly. ]".center(64))
+        time.sleep(1)
+        buverse_main(0)
+    elif gpro == "000":
+        with open('buvs_recallsession.txt', 'w') as dbrecallss:
+            dbrecallss.flush()
+        print("[ Log-out successflly. ]".center(64))
+        time.sleep(1.25)
+        buvs_exit()
+    else:buverse_verseprofile()
 
 ##############################################################################
 #                           BU-Verse initiate                                #

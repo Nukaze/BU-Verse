@@ -163,7 +163,7 @@ def buverse_recallsession():
                         ssuname = "".join(ssunamelst)
                         ssdisnamelst.append(disnamelst[idx])
                         ssdisname = "".join(ssdisnamelst)
-                        loading_progress(7,0.01,0.1)
+                        loading_progress(7,0.01,0.2)
                         print("[ Recalling Profile logging-in.. ]".center(64))
                         time.sleep(0.4)
                         print(("[ Welcome back %s ]" % "".join(ssdisname)).center(64))
@@ -227,11 +227,11 @@ def buverse_main(sessionActive):
         gout = input("Press select menu : ")
         if gout == "1":
             print("[ Going to Login.. ]".center(64))
-            loading_progress(7,0.02,0.2)
+            loading_progress(7,0.02,0.4)
             buverse_login()
         elif gout == "2":
             print("[ Going to Sign-up.. ]".center(64))
-            loading_progress(7,0.05,0.2)
+            loading_progress(7,0.05,0.6)
             buverse_signup()
         elif gout == "0":
             buvs_exit()
@@ -284,7 +284,7 @@ def buverse_signup():       # 0000000000000
             dbkey.write(pwkeylst[idx]+" \n")
             dbidc.write(idclst[idx]+" \n")
         print()
-        print("[ BU-Verse Sign-up Successfully. ]")
+        print("[ BU-Verse Sign-up Successfully. ]".center(64))
         print()
         time.sleep(0.5)
         while True:
@@ -453,7 +453,7 @@ def buverse_versemain():
         print(postlocaltime.center(64))
         print(("[ %s ]" % ssdisname).center(64))
         if getfile('buvs_postingversedb.txt'):
-            with open('buvs_postingversedb.txt','r',buffering=1)as dbposting:
+            with open('buvs_postingversedb.txt','r',buffering=1,encoding="utf8")as dbposting:
                 postdisnamelst.clear();postfeedlst.clear();posttimelst.clear()
                 while True:
                     getrawpost = dbposting.readline().split("|*|")
@@ -596,13 +596,85 @@ def buvs_callprofile():
                 userlst.append(udata[0])
                 disnamelst.append(udata[1])
             else:break
+def buvs_navexplore():
+    print("[1] Explore again? [2] Back to Verse [3] My-Verse".center(64))
+    print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
 
 def buverse_verseexplore():
     uicls()
     buvs_maintitle("Explore-Verse")
     buvs_callprofile()
-    input()
-    pass
+    while True:
+        print("|  What Username or Display-name to Explore")
+        nexplore = input("|> ")
+        if nexplore in userlst:
+            idnex = userlst.index(nexplore)
+            for i in range(4):
+                dot = "."*i
+                print(("Explored in Username%s "%dot).center(64),end="\r")
+                time.sleep(0.5)
+            print("_" * 64)
+            print("\n| Username : " + userlst[idnex])
+            print("| Display name : " + disnamelst[idnex])
+            print("\n")
+            time.sleep(1)
+            break
+        elif nexplore in disnamelst:
+            idnex = disnamelst.index(nexplore)
+            for i in range(4):
+                dot = "."*i
+                print(("Explored in Username%s "%dot).center(64),end="\r")
+                time.sleep(0.5)
+            print("_"*64)
+            print("\n| Username : " + userlst[idnex])
+            print("| Display name : " + disnamelst[idnex])
+            print("\n")
+            time.sleep(1)
+            break
+        else:
+            time.sleep(0.5)
+            print()
+            print(("[ * \"%s\" does not exist in the Verse. ]"%nexplore).center(64))
+            time.sleep(0.75)
+            break
+    print("\n")
+    print("*" * 64)
+    print()
+    buvs_navexplore()
+    print()
+    print("*" * 64)
+    buvs_navverse()
+
+def buvs_navverse():
+    while True:
+        gpro = input("> ")
+        if gpro == "1":
+            buverse_verseexplore()
+        elif gpro == "2":
+            buverse_versemain()
+        elif gpro == "3":
+            buverse_verseprofile()
+        elif gpro == "0":
+            buvs_exit()
+        elif gpro == "00":
+            with open('buvs_recallsession.txt', 'w') as dbrecallss:
+                dbrecallss.flush()
+            print("[ Log-out successflly. ]".center(64))
+            time.sleep(0.5)
+            print("[ Back to Menu.. ]".center(64))
+            time.sleep(1)
+            buverse_main(0)
+        elif gpro == "000":
+            with open('buvs_recallsession.txt', 'w') as dbrecallss:
+                dbrecallss.flush()
+            print("[ Log-out successflly. ]".center(64))
+            time.sleep(0.5)
+            print("[ Exitting.. ]".center(64))
+            time.sleep(1.25)
+            buvs_exit()
+        else:
+            print("[ invalid menu. ]".center(64))
+            buvs_navverse()
 
 def buvs_navprofile():
     print("[1] Edit Display name? [2] Explore People [3] Back to Verse".center(64))

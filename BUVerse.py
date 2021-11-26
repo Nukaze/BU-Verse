@@ -129,7 +129,9 @@ def buvs_versemenu(rpoint):
 ##############################################################################
 
 def buverse_recallsession():
+    print("Loading.. ".center(64))
     buvs_checklstclear()
+    uicls()
     if getfile('buvs_recallsession.txt'):
         with open('buvs_recallsession.txt','r')as dbrecallss:
             if dbrecallss !=[] :
@@ -182,7 +184,7 @@ def buverse_recallsession():
                         time.sleep(0.25)
                         print(("[ Welcome back Dev %s ]" % ssdisname).center(64))
                         print("|" * 64)
-                        input("# Press Any key to continue  > ")
+                        #input("# Press Any key to continue  > ")
                         uicls()
                         buverse_main(sessionRecall)     #devrecall
                     else: buverse_main(0)

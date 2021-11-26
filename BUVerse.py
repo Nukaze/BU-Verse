@@ -256,27 +256,8 @@ def buverse_signup():       # 0000000000000
                 idclst.append(idcdata[0])
             else:
                 break
-        uname = input("Enter Your Username \n> ")
-        if uname not in userlst:
-            userlst.append(uname)
-            idx = userlst.index(uname)
-            buverse_getpwkey(idx)
-        else:
-            print("")
-            strx64 = "x"*64
-            print(strx64.center(64))
-            print("[ Sorry, this Username is already taken. ]".center(64))
-            print("[ Please try again. ]".center(64))
-            while True:
-                print()
-                print("\\" * 64)
-                nav = input("( Choose [T] Try again or [M] back to Main menu )\n > ")
-                if nav.upper() == "T":
-                    buverse_signup()
-                elif nav.upper() == "M":
-                    buverse_main(0)
-                else:
-                    continue
+
+        getusername()
         getidcard()
         getdisname()
         with open('buvs_userdb.txt', 'a')as dbuser, open('buvs_keydb.txt', 'a')as dbkey, open('buvs_idcdb.txt', 'a')as dbidc:
@@ -297,6 +278,37 @@ def buverse_signup():       # 0000000000000
             else:
                 continue
     buverse_main(sessionActive)
+
+def getusername():
+    uname = input("Enter Your Username \n> ")
+    unamecntlst = uname.count(" ")
+    while not uname or unamecntlst != 0:
+        uicls()
+        print(headsignup)
+        print("** Username \"BlankSpace\" not allowed.")
+        uname = input("Enter Your Username \n> ")
+        unamecntlst = uname.count(" ")
+    if uname not in userlst:
+        global idx
+        userlst.append(uname)
+        idx = userlst.index(uname)
+        buverse_getpwkey(idx)
+    else:
+        print("")
+        strx64 = "x" * 64
+        print(strx64.center(64))
+        print("[ Sorry, this Username is already taken. ]".center(64))
+        print("[ Please try again. ]".center(64))
+        while True:
+            print()
+            print("\\" * 64)
+            nav = input("( Choose [T] Try again or [M] back to Main menu )\n > ")
+            if nav.upper() == "T":
+                buverse_signup()
+            elif nav.upper() == "M":
+                buverse_main(0)
+            else:
+                continue
 
 def buverse_getpwkey(idx):
     pwkey1 = prompt("Enter Your Password (Must have more than 8 characters) \n> ",is_password = True)
@@ -485,7 +497,7 @@ def buvs_maintitle(headtitle):
     print("#" * 64)
     print(("[ %s ]"%headtitle).center(64))
     print(postlocaltime.center(64))
-    print(("--------[ %s ]--------" % ssdisname).center(64))
+
 
 def buverse_callfeedverse0(rpoint):
     while True:
@@ -630,7 +642,7 @@ def buverse_verseexplore():
             idnex = disnamelst.index(nexplore)
             for i in range(4):
                 dot = "."*i
-                print(("Explored in Username%s "%dot).center(64),end="\r")
+                print(("Explored in Display-name%s "%dot).center(64),end="\r")
                 time.sleep(0.5)
             print("_"*64)
             print("\n| Username : " + userlst[idnex])
@@ -689,7 +701,17 @@ def buvs_navprofile():
 
 def buverse_verseprofile():
     uicls()
+    buvs_checklstclear()
+    with open('buvs_userdb.txt', 'r', buffering=1) as dbuser:
+        while True:
+            udata = dbuser.readline().split()
+            if udata != []:
+                userlst.append(udata[0])
+                disnamelst.append(udata[1])
+            else:
+                break
     buvs_maintitle("My-Verse")
+    print(("--------[ %s ]--------" % disnamelst[idx]).center(64))
     buvs_callprofile()
     print("\n| Username : "+userlst[idx])
     print("| Display name : "+disnamelst[idx])
@@ -704,11 +726,12 @@ def buverse_verseprofile():
         while True:
             uicls()
             buvs_maintitle("My-Verse")
+            print(("--------[ %s ]--------" % disnamelst[idx]).center(64))
             buvs_callprofile()
             print("\n| Username : " + userlst[idx])
             print("| Display name : " + disnamelst[idx])
             print("\n")
-            disname = input("Edit Your Display Name (* Display Name \"BlankSpace\" not allowed.)\n> ")
+            disname = input("| Edit Your Display Name (* Display Name \"BlankSpace\" not allowed.)\n> ")
             disnamecntlst = disname.count(" ")
             while not disname or disnamecntlst != 0:
                 print(disname)
@@ -726,6 +749,7 @@ def buverse_verseprofile():
                     print("[ Your Display Name has been Change. ]".center(64))
                 break
         time.sleep(1.5)
+        buverse_verseprofile()
     elif gpro == "2":
         buverse_verseexplore()
     elif gpro == "3":

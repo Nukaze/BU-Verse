@@ -15,7 +15,7 @@ navlst = ["T", "M", "X"]                                                        
 postfeedlst, postdisnamelst, posttimelst = [], [], []                                   # contentfeed
 userlst, pwkeylst, idclst = [], [], []                                                  # LoginCheckSystem
 devuserxlst, devpwxlst, devdislst = [], [],[]                                           # DevLoginCheck
-disnamelst = [], [], []                                                                 # Profile data
+disnamelst = []                                                                 # Profile data
 ssdisnamelst, ssunamelst = [],[]                                                        # session
 timer,sessionActive,run,cnt = 0,0,0,0
 uicls = lambda: os.system('cls')
@@ -25,6 +25,7 @@ headlogin = ("|"*64 + "\n\n" + "< [ BU-Verse Login ] >".center(64) + "\n\n" + "|
 ##############################################################################
 #                           BU-Verse Tools-Phase                             #
 ##############################################################################
+
 def getfile(filecall):
     return os.stat(filecall).st_size
 
@@ -194,13 +195,13 @@ def buverse_recallsession():
 ##############################################################################
 #                           BU-Verse Portal-Phase                            #
 ##############################################################################
+
 def buverse_main(sessionActive):
     if sessionActive == 1:#user
         buverse_versemain()
         buverse_main(sessionActive)
     elif sessionActive == 9:#dev
         uicls()
-        #print("sessionActive =", sessionActive)
         print("#"*64)
         print("< [ BU-Verse Developer mode ] >".center(64))
         print(("< [ Welcome Back %s ] >"%ssdisname).center(64))
@@ -211,7 +212,6 @@ def buverse_main(sessionActive):
     else:
         uicls()
         buvs_checklstclear()
-        #print("sessionActive =",sessionActive)
         print("#" * 64)
         print()
         print("< [ Welcome to BU-Verse ] >".center(64))
@@ -388,8 +388,10 @@ def buverse_login():
             uicls()
             buverse_main(1)
         else:
+            print()
             print("[ Logging-in Failed. ]".center(64))
             print("[ Wrong Password, Please try again.. ]".center(64))
+            print()
             time.sleep(0.5)
             while True:
                 print("\\" * 64)
@@ -428,7 +430,9 @@ def buverse_login():
                     buverse_main(0)
                 else:continue
     else:
+        print()
         print("[ Sorry, Username not found. ]".center(64))
+        print()
         time.sleep(.5)
         while True:
             print("\\" * 64)
@@ -439,9 +443,11 @@ def buverse_login():
                 buverse_main(0)
             else:
                 continue
+
 ##############################################################################
 #                           BU-Verse Verse-Phase                             #
 ##############################################################################
+
 def buverse_versemain():
     while True:
         uicls()
@@ -596,6 +602,7 @@ def buvs_callprofile():
                 userlst.append(udata[0])
                 disnamelst.append(udata[1])
             else:break
+
 def buvs_navexplore():
     print("[1] Explore again? [2] Back to Verse [3] My-Verse".center(64))
     print("[0] Exit  [00] Log-out and Menu  [000] Log-out and Exit".center(64))
@@ -746,5 +753,6 @@ def buverse_verseprofile():
 ##############################################################################
 #                           BU-Verse initiate                                #
 ##############################################################################
+
 buverse_recallsession()
 buverse_main(sessionActive)

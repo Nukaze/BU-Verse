@@ -330,10 +330,10 @@ def buverse_getpwkey(idx):
         buverse_getpwkey(idx)
 
 def getidcard():
-    idc = input("Enter Your ID card Number (Must be number and more equal 13 character) \n> ")
+    idc = input("Enter Your ID card Number (Must be number and equal 13 character) \n> ")
     while len(idc) != 13 or not idc.isdecimal():
         print("* ID card must have 13 characters and number only")
-        idc = input("Enter Your ID card Number (Must be number and more equal 13 character) \n> ")
+        idc = input("Enter Your ID card Number (Must be number andequal 13 character) \n> ")
     idchashed = pwhash(idc)
     idclst.append(idchashed)
 

@@ -1,2 +1,2 @@
 # BU-Verse
-  Command line Project_2021-2022 ordinary Project
+  Command line Project 2021-2022 Ordinary Project
